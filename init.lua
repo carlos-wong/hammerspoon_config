@@ -119,7 +119,7 @@ hs.hotkey.bind({"cmd", "shift"}, 'A', launch_androidstudio)
 
 function launch_wechat()
   -- hs.alert.show("wechat_ctrl: " .. (hs.application.get("微信"):name() or "") .. string.format("bool: %s",hs.application.get("微信"):isFrontmost()) )
-  if not hs.application.get("微信"):isFrontmost() then
+  if not hs.application.get("微信") or not hs.application.get("微信"):isFrontmost() then
     hs.application.launchOrFocus("Wechat")
   else
     hs.application.get("微信"):hide()
