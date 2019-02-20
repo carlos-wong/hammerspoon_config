@@ -12,7 +12,7 @@ local speech = require 'hs.speech'
 
 local hyper = {'ctrl', 'cmd'}
 
-
+-- 1 is auto switch hide/unhide for the app
 local key2App = {
   i = {'/Applications/iTerm.app', 'English', 2},
   e = {'/Applications/Emacs.app', 'English', 2},
