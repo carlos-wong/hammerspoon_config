@@ -18,6 +18,8 @@ local key2App = {
   e = {'/Applications/Emacs.app', 'English', 2},
   c = {'/Applications/Google Chrome.app', '', 2},
   w = {'/Applications/WeChat.app', 'Chinese', 1},
+  m = {'/Applications/Mattermost.app', 'Chinese', 1},
+  t = {'/Applications/TickTick.app', 'Chinese', 1},
   f = {'/System/Library/CoreServices/Finder.app', 'English', 1},
   s = {'/Applications/System Preferences.app', 'English', 1},
 }
@@ -89,9 +91,9 @@ function rightSize()
     if(screenframe.x == frame.x) then
       -- print("found frame")
       -- print(frame)
-      local new_screen_index = k + 1
-      if new_screen_index > frame_len then
-        new_screen_index = 1
+      local new_screen_index = k - 1
+      if new_screen_index < 1 then
+        new_screen_index = frame_len
       end
       -- print('new screen index')
       -- print(new_screen_index)
@@ -124,10 +126,11 @@ function leftSize()
     local frame = v:frame()
     -- print(frame)
     if(screenframe.x == frame.x) then
-      local new_screen_index = k - 1
-      if new_screen_index < 1 then
-        new_screen_index = frame_len
+      local new_screen_index = k + 1
+      if new_screen_index > frame_len then
+        new_screen_index = 1
       end
+
       -- print('found target sreen size'..k)
       -- print(new_screen_index)
       local select_screen_frame = hs.screen.allScreens()[new_screen_index];
@@ -184,7 +187,7 @@ hs.hotkey.bind({"cmd","ctrl"}, "V", function() hs.eventtap.keyStrokes(hs.pastebo
 
 
 hs.urlevent.bind("CarlosAlert", function(eventName, params)
-                   hs.alert.show(params.message)
+                   hs.alert.show(params.message,Null,hs.screen.mainScreen(),3)
 end)
 
 local carlosmenubar
@@ -259,6 +262,7 @@ function toggleApplication(app)
           mainwin:application():hide()
         end
         setInputMethod = false
+        updateFocusAppInputMethod()
       else
         -- Focus target application if it not at frontmost.
         mainwin:application():activate(true)
@@ -290,3 +294,22 @@ for key, app, switchhide in pairs(key2App) do
       toggleApplication(app)
   end)
 end
+
+-- hotkey.bind(
+--   hyper, "x",
+--   function()
+--     hs.osascript.applescriptFromFile('/Users/carlos/ownCloud/carlos_data/system-config/tools/appscript_selecttxt.scpt')
+--     print("Debug trigger hyber key pastboard:getContents:"..hs.pasteboard.getContents())
+--     -- launchApp('/Users/carlos/Applications/Cerebro.app')
+--     -- hs.eventtap.keyStrokes("d "..hs.pasteboard.getContents())
+-- end)
+local clock = os.clock
+function sleep(n)  -- seconds
+  local t0 = clock()
+  while clock() - t0 <= n do end
+end
+hs.textDroppedToDockIconCallback = function(selectedtxt)
+  launchApp('/Users/carlos/Applications/Cerebro.app')
+  sleep(0.3)
+  hs.eventtap.keyStrokes("d "..selectedtxt)
+  end
