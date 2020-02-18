@@ -84,27 +84,41 @@ function rightSize()
   local screen = win:screen()
   local screenframe = screen:frame()
   local frame_len = #hs.screen.allScreens()
-  -- print(f)
-  for k, v in pairs(hs.screen.allScreens()) do
-    local frame = v:frame()
-    -- print(frame)
-    if(screenframe.x == frame.x) then
-      -- print("found frame")
-      -- print(frame)
-      local new_screen_index = k - 1
-      if new_screen_index < 1 then
-        new_screen_index = frame_len
+  if frame_len == 1 then
+    print(screenframe.w)
+    local half_screenframewidth = screenframe.w/2
+    local current_x = f.x
+    if current_x < half_screenframewidth then
+      f.x = half_screenframewidth
+    else
+      f.x = screenframe.x
+    end
+
+    f.y = screenframe.y
+    f.w = half_screenframewidth
+    f.h = screenframe.h
+    win:setFrame(f)
+  else
+    for k, v in pairs(hs.screen.allScreens()) do
+      local frame = v:frame()
+      print(frame)
+      if(screenframe.x == frame.x) then
+        -- print(frame)
+        local new_screen_index = k - 1
+        if new_screen_index < 1 then
+          new_screen_index = frame_len
+        end
+        -- print('new screen index')
+        -- print(new_screen_index)
+        local select_screen_frame = hs.screen.allScreens()[new_screen_index];
+        select_screen_frame = select_screen_frame:frame();
+        -- print('select frame is')
+        -- print(select_screen_frame)
+        f.x = (select_screen_frame.w - f.w)/2 + select_screen_frame.x
+        f.y = select_screen_frame.y
+        win:setFrame(f)
+        break
       end
-      -- print('new screen index')
-      -- print(new_screen_index)
-      local select_screen_frame = hs.screen.allScreens()[new_screen_index];
-      select_screen_frame = select_screen_frame:frame();
-      -- print('select frame is')
-      -- print(select_screen_frame)
-      f.x = (select_screen_frame.w - f.w)/2 + select_screen_frame.x
-      f.y = select_screen_frame.y
-      win:setFrame(f)
-      break
     end
   end
 end
@@ -122,24 +136,39 @@ function leftSize()
   -- print(f)
   -- print(screenframe)
   -- print('start loop screens')
-  for k, v in pairs(hs.screen.allScreens()) do
-    local frame = v:frame()
-    -- print(frame)
-    if(screenframe.x == frame.x) then
-      local new_screen_index = k + 1
-      if new_screen_index > frame_len then
-        new_screen_index = 1
-      end
+  if frame_len == 1 then
+    local half_screenframewidth = screenframe.w/2
+    local current_x = f.x
+    if current_x < half_screenframewidth then
+      f.x = half_screenframewidth
+    else
+      f.x = screenframe.x
+    end
 
-      -- print('found target sreen size'..k)
-      -- print(new_screen_index)
-      local select_screen_frame = hs.screen.allScreens()[new_screen_index];
-      select_screen_frame = select_screen_frame:frame();
-      -- print(select_screen_frame)
-      f.x = (select_screen_frame.w - f.w)/2 + select_screen_frame.x
-      f.y = select_screen_frame.y
-      win:setFrame(f)
-      break
+    f.y = screenframe.y
+    f.w = half_screenframewidth
+    f.h = screenframe.h
+    win:setFrame(f)
+  else
+    for k, v in pairs(hs.screen.allScreens()) do
+      local frame = v:frame()
+      -- print(frame)
+      if(screenframe.x == frame.x) then
+        local new_screen_index = k + 1
+        if new_screen_index > frame_len then
+          new_screen_index = 1
+        end
+
+        -- print('found target sreen size'..k)
+        -- print(new_screen_index)
+        local select_screen_frame = hs.screen.allScreens()[new_screen_index];
+        select_screen_frame = select_screen_frame:frame();
+        -- print(select_screen_frame)
+        f.x = (select_screen_frame.w - f.w)/2 + select_screen_frame.x
+        f.y = select_screen_frame.y
+        win:setFrame(f)
+        break
+      end
     end
   end
 end
