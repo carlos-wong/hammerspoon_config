@@ -15,13 +15,14 @@ local hyper = {'ctrl', 'cmd'}
 -- 1 is auto switch hide/unhide for the app
 local key2App = {
   i = {'/Applications/iTerm.app', 'English', 2},
-  e = {'/Applications/Emacs.app', 'English', 2},
+  e = {'/usr/local/opt/emacs-head@27/Emacs.app', 'English', 2},
   c = {'/Applications/Google Chrome.app', '', 2},
-  w = {'/Applications/WeChat.app', 'Chinese', 1},
+  w = {'/Users/carlos/Applications/WeChat.app', 'Chinese', 1},
   m = {'/Applications/Mattermost.app', 'Chinese', 1},
-  t = {'/Applications/TickTick.app', 'Chinese', 1},
+  t = {'/Users/carlos/Applications/TickTick.app', 'Chinese', 1},
   f = {'/System/Library/CoreServices/Finder.app', 'English', 1},
   s = {'/Applications/System Preferences.app', 'English', 1},
+  d = {'/Users/carlos/Applications/Microsoft Remote Desktop Beta.app','English',1},
 }
 
 function findApplication(appPath)
@@ -67,7 +68,7 @@ function fullscreen()
   local f = win:frame()
   local screen = win:screen()
   local max = screen:frame()
-  f.x = max.x
+  f.x = max.x + 2
   f.y = max.y
   f.w = max.w
   f.h = max.h
@@ -216,7 +217,11 @@ hs.hotkey.bind({"cmd","ctrl"}, "V", function() hs.eventtap.keyStrokes(hs.pastebo
 
 
 hs.urlevent.bind("CarlosAlert", function(eventName, params)
-                   hs.alert.show(params.message,Null,hs.screen.mainScreen(),3)
+                   hs.alert.show(params.message,{atScreenEdge=0,fadeOutDuration=3,fillColor={red=255/255,green=150/255,blue=203/255}},hs.screen.mainScreen(),5)
+end)
+
+hs.urlevent.bind("toggleApplication", function(eventName, params)
+                   toggleApplication(params.app)
 end)
 
 local carlosmenubar
@@ -265,7 +270,9 @@ hs.hotkey.bind(hyper, "z", showAppKeystroke)
 
 
 function launchApp(appPath)
-  application.launchOrFocus(appPath)
+  if appPath then
+    application.launchOrFocus(appPath)
+  end
 end
 
 function toggleApplication(app)
