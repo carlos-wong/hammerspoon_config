@@ -217,7 +217,10 @@ hs.hotkey.bind({"cmd","ctrl"}, "V", function() hs.eventtap.keyStrokes(hs.pastebo
 
 
 hs.urlevent.bind("CarlosAlert", function(eventName, params)
-                   hs.alert.show(params.message,{atScreenEdge=0,fadeOutDuration=3,fillColor={red=255/255,green=150/255,blue=203/255}},hs.screen.mainScreen(),5)
+                   for k, select_screen in pairs(hs.screen.allScreens()) do
+                     hs.alert.show(params.message,{atScreenEdge=0,fadeOutDuration=2,fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,4)
+                   end
+                   
 end)
 
 hs.urlevent.bind("toggleApplication", function(eventName, params)
