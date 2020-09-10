@@ -15,21 +15,29 @@ local hyper = {'ctrl', 'cmd'}
 -- 1 is auto switch hide/unhide for the app
 local key2App = {
   i = {'/Applications/iTerm.app', 'English', 2},
-  e = {'/usr/local/opt/emacs-head@27/Emacs.app', 'English', 2},
+  e = {'/Applications/Emacs.app', 'English', 2, "org.gnu.Emacs"},
   c = {'/Applications/Google Chrome.app', '', 2},
   w = {'/Users/carlos/Applications/WeChat.app', 'Chinese', 1},
-  m = {'/Applications/Mattermost.app', 'Chinese', 1},
+  -- m = {'/Applications/Mattermost.app', 'Chinese', 1},
   t = {'/Users/carlos/Applications/TickTick.app', 'Chinese', 1},
   f = {'/System/Library/CoreServices/Finder.app', 'English', 1},
   s = {'/Applications/System Preferences.app', 'English', 1},
-  d = {'/Users/carlos/Applications/Microsoft Remote Desktop Beta.app','English',1},
+  a = {'/Applications/Android Studio.app', 'English', 1},
+  m = {'/Users/carlos/Applications/Microsoft Remote Desktop Beta.app','English',1},
 }
 
-function findApplication(appPath)
+function findApplication(app)
+  local appPath = app[1]
+  local inputMethod = app[2]
+  local switchide = app[3]
+  local appBundleId = ""
+  if app[4] then
+    appBundleId = app[4]
+  end
   local apps = application.runningApplications()
   for i = 1, #apps do
     local app = apps[i]
-    if app:path() == appPath then
+    if app:path() == appPath or app:bundleID() == appBundleId then
       return app
     end
   end
@@ -86,7 +94,6 @@ function rightSize()
   local screenframe = screen:frame()
   local frame_len = #hs.screen.allScreens()
   if frame_len == 1 then
-    print(screenframe.w)
     local half_screenframewidth = screenframe.w/2
     local current_x = f.x
     if current_x < half_screenframewidth then
@@ -102,7 +109,6 @@ function rightSize()
   else
     for k, v in pairs(hs.screen.allScreens()) do
       local frame = v:frame()
-      print(frame)
       if(screenframe.x == frame.x) then
         -- print(frame)
         local new_screen_index = k - 1
@@ -191,13 +197,6 @@ function reloadConfig(files)
 end
 myWatcher = hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig):start()
 
-function launch_androidstudio()
-  hs.application.launchOrFocus("Android Studio.app")
-end
-hs.hotkey.bind({"cmd", "ctrl"}, 'A', launch_androidstudio)
-hs.hotkey.bind({"cmd", "shift"}, 'A', launch_androidstudio)
-
-
 
 function applicationWatcher(appName, eventType, appObject)
   if (eventType == hs.application.watcher.activated) then
@@ -218,9 +217,8 @@ hs.hotkey.bind({"cmd","ctrl"}, "V", function() hs.eventtap.keyStrokes(hs.pastebo
 
 hs.urlevent.bind("CarlosAlert", function(eventName, params)
                    for k, select_screen in pairs(hs.screen.allScreens()) do
-                     hs.alert.show(params.message,{atScreenEdge=0,fadeOutDuration=2,fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,4)
+                     hs.alert.show(params.message,{atScreenEdge=0,fadeOutDuration=2,fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,1.618)
                    end
-                   
 end)
 
 hs.urlevent.bind("toggleApplication", function(eventName, params)
@@ -274,7 +272,7 @@ hs.hotkey.bind(hyper, "z", showAppKeystroke)
 
 function launchApp(appPath)
   if appPath then
-    application.launchOrFocus(appPath)
+    local app = application.launchOrFocus(appPath)
   end
 end
 
@@ -286,28 +284,30 @@ function toggleApplication(app)
   -- Tag app path use for `applicationWatcher'.
   startAppPath = appPath
 
-  local app = findApplication(appPath)
+  local app = findApplication(app)
   local setInputMethod = true
-
   if not app then
     -- Application not running, launch app
     launchApp(appPath)
   else
     -- Application running, toggle hide/unhide
     local mainwin = app:mainWindow()
+    -- print("app main win is:"..mainwin)
     if mainwin then
       if app:isFrontmost() then
         if switchide == 1 then
           mainwin:application():hide()
         end
         setInputMethod = false
-        updateFocusAppInputMethod()
+        -- updateFocusAppInputMethod()
       else
         -- Focus target application if it not at frontmost.
         mainwin:application():activate(true)
         mainwin:application():unhide()
         mainwin:focus()
       end
+      local screenframe = mainwin:screen():frame()
+      hs.mouse.setRelativePosition({x=screenframe.w/2, y=screenframe.h/2},mainwin:screen())
     else
       -- Start application if application is hide.
       if app:hide() then
@@ -316,13 +316,13 @@ function toggleApplication(app)
     end
   end
 
-  if setInputMethod then
-    if inputMethod == 'English' then
-      English()
-    else
-      Chinese()
-    end
-  end
+  -- if setInputMethod then
+  --   if inputMethod == 'English' then
+  --     English()
+  --   else
+  --     Chinese()
+  --   end
+  -- end
 end
 
 -- Start or focus application.
