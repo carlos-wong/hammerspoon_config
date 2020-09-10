@@ -24,6 +24,8 @@ local key2App = {
   s = {'/Applications/System Preferences.app', 'English', 1},
   a = {'/Applications/Android Studio.app', 'English', 1},
   m = {'/Users/carlos/Applications/Microsoft Remote Desktop Beta.app','English',1},
+  -- f20 = {'/Applications/NeteaseMusic.app','English',1},
+  -- f20 = {'/Applications/QQMusic.app','English',1},
 }
 
 function findApplication(app)
@@ -214,6 +216,22 @@ appWatcher:start()
 
 hs.hotkey.bind({"cmd","ctrl"}, "V", function() hs.eventtap.keyStrokes(hs.pasteboard.getContents()) end)
 
+hs.urlevent.bind("CarlosCtrlMusicApps",function(eventName, params)
+                   if params.type == "Netease" then
+                     local app = findApplication({'/Applications/NeteaseMusic.app','English',1})
+                     if app then
+                       app:selectMenuItem({params.firstitem, params.seconditem})
+                     end
+                   end
+
+                   if params.type == "QQMusic" then
+                     app = findApplication({'/Applications/QQMusic.app','English',1})
+                     if app then
+                       app:selectMenuItem({params.firstitem, params.seconditem})
+                     end
+                   end
+
+end)
 
 hs.urlevent.bind("CarlosAlert", function(eventName, params)
                    for k, select_screen in pairs(hs.screen.allScreens()) do
