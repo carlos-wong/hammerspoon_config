@@ -324,8 +324,8 @@ function toggleApplication(app)
         mainwin:application():unhide()
         mainwin:focus()
       end
-      local screenframe = mainwin:screen():frame()
-      hs.mouse.setRelativePosition({x=screenframe.w/2, y=screenframe.h/2},mainwin:screen())
+      local appwindowsframe = app:focusedWindow():frame();
+      hs.mouse.setAbsolutePosition({x=appwindowsframe.x+appwindowsframe.w/2, y=appwindowsframe.y + appwindowsframe.h/2})
     else
       -- Start application if application is hide.
       if app:hide() then
