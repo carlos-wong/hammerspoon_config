@@ -370,3 +370,14 @@ hs.textDroppedToDockIconCallback = function(selectedtxt)
   sleep(0.3)
   hs.eventtap.keyStrokes("d "..selectedtxt)
   end
+
+function handleWifiWatcher(watcher,eventType,interface)
+  if eventType == "SSIDChange" then
+    if hs.wifi.currentNetwork(interface) == "Mrwhite" then
+      hs.execute("open /Users/carlos/ownCloud/carlos_data/system-config/tools/auto-mount-afs-when-cnnect-Mrwhite.app")
+    end
+  end
+
+end
+hs.wifi.watcher.new(handleWifiWatcher):watchingFor("SSIDChange"):start()
+-- hs.caffeinate.watcher.new(handle_wifi_watcher):start()
