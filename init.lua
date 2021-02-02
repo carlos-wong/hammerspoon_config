@@ -23,6 +23,7 @@ local key2App = {
   f = {'/System/Library/CoreServices/Finder.app', 'English', 1},
   s = {'/Applications/System Preferences.app', 'English', 1},
   a = {'/Applications/Android Studio.app', 'English', 1},
+  s = {'/Applications/Skim.app', 'English', 1},
   m = {'/Users/carlos/Applications/Microsoft Remote Desktop Beta.app','English',1},
   -- f20 = {'/Applications/NeteaseMusic.app','English',1},
   -- f20 = {'/Applications/QQMusic.app','English',1},
@@ -132,9 +133,6 @@ function rightSize()
   end
 end
 
-hs.hotkey.bind({"cmd", "ctrl"}, "Right",rightSize)
-hs.hotkey.bind({"cmd", "shift"}, "Right",rightSize)
-
 function leftSize()
   local win = hs.window.focusedWindow()
   local f = win:frame()
@@ -182,8 +180,13 @@ function leftSize()
   end
 end
 
+
+
+hs.hotkey.bind({"cmd", "ctrl"}, "Right",rightSize)
+
 hs.hotkey.bind({"cmd", "ctrl"}, "Left",leftSize)
-hs.hotkey.bind({"cmd", "shift"}, "Left",leftSize)
+
+
 
 
 function reloadConfig(files)
@@ -209,12 +212,29 @@ function applicationWatcher(appName, eventType, appObject)
       appObject:selectMenuItem({"窗口", "前置全部窗口"})
       -- hs.alert.show("Debug select menu")
     end
+    if (appName == "预览") then
+      -- hs.alert.show("Debug detech finder!")
+      -- Bring all Finder windows forward when one gets activated
+      appObject:selectMenuItem({"窗口", "前置全部窗口"})
+      appObject:selectMenuItem({"显示", "缩放至窗口大小"})
+      -- hs.alert.show("Debug select menu")
+    end
   end
 end
 appWatcher = hs.application.watcher.new(applicationWatcher)
 appWatcher:start()
 
 hs.hotkey.bind({"cmd","ctrl"}, "V", function() hs.eventtap.keyStrokes(hs.pasteboard.getContents()) end)
+
+hs.urlevent.bind("CarlosCtrlApps",function(eventName, params)
+                   local app = findApplication({params.appPath,'English',1})
+                   print(params.appPath)
+                   print(inspect(app))
+                   if app then
+                     app:selectMenuItem({params.firstitem, params.seconditem})
+                   end
+end)
+
 
 hs.urlevent.bind("CarlosCtrlMusicApps",function(eventName, params)
                    if params.type == "Netease" then
@@ -234,8 +254,9 @@ hs.urlevent.bind("CarlosCtrlMusicApps",function(eventName, params)
 end)
 
 hs.urlevent.bind("CarlosAlert", function(eventName, params)
+                   print(hs.screen.allScreens())
                    for k, select_screen in pairs(hs.screen.allScreens()) do
-                     hs.alert.show(params.message,{atScreenEdge=0,fadeOutDuration=2,fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,1.618)
+                     hs.alert.show(params.message,{atScreenEdge=0,fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,3.618)
                    end
 end)
 
@@ -247,8 +268,7 @@ local carlosmenubar
 
 function Init()
   carlosmenubar = hs.menubar.new()
-  carlosmenubar:setIcon("/Users/carlos/ownCloud/carlos_data/system-config/hammerspoon/hammerspoon_config/tomato.png")
-
+  -- carlosmenubar:setIcon("/Users/carlos/ownCloud/carlos_data/system-config/hammerspoon/hammerspoon_config/tomato.png")
 end
 
 Init()
@@ -371,13 +391,14 @@ hs.textDroppedToDockIconCallback = function(selectedtxt)
   hs.eventtap.keyStrokes("d "..selectedtxt)
   end
 
-function handleWifiWatcher(watcher,eventType,interface)
-  if eventType == "SSIDChange" then
-    if hs.wifi.currentNetwork(interface) == "Mrwhite" then
-      hs.execute("open /Users/carlos/ownCloud/carlos_data/system-config/tools/auto-mount-afs-when-cnnect-Mrwhite.app")
-    end
-  end
+-- function handleWifiWatcher(watcher,eventType,interface)
+--   if eventType == "SSIDChange" then
+--     if hs.wifi.currentNetwork(interface) == "Mrwhite" then
+--       hs.execute("open /Users/carlos/ownCloud/carlos_data/system-config/tools/auto-mount-afs-when-cnnect-Mrwhite.app")
+--     end
+--   end
 
-end
-hs.wifi.watcher.new(handleWifiWatcher):watchingFor("SSIDChange"):start()
+-- end
+-- hs.wifi.watcher.new(handleWifiWatcher):watchingFor("SSIDChange"):start()
 -- hs.caffeinate.watcher.new(handle_wifi_watcher):start()
+
