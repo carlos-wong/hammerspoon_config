@@ -114,9 +114,9 @@ function rightSize()
       local frame = v:frame()
       if(screenframe.x == frame.x) then
         -- print(frame)
-        local new_screen_index = k - 1
-        if new_screen_index < 1 then
-          new_screen_index = frame_len
+        local new_screen_index = k + 1
+        if new_screen_index > frame_len then
+          new_screen_index = 1
         end
         -- print('new screen index')
         -- print(new_screen_index)
@@ -161,11 +161,11 @@ function leftSize()
       local frame = v:frame()
       -- print(frame)
       if(screenframe.x == frame.x) then
-        local new_screen_index = k + 1
-        if new_screen_index > frame_len then
-          new_screen_index = 1
-        end
 
+        local new_screen_index = k - 1
+        if new_screen_index < 1 then
+          new_screen_index = frame_len
+        end
         -- print('found target sreen size'..k)
         -- print(new_screen_index)
         local select_screen_frame = hs.screen.allScreens()[new_screen_index];
