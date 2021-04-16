@@ -389,7 +389,28 @@ hs.textDroppedToDockIconCallback = function(selectedtxt)
   launchApp('/Users/carlos/Applications/Cerebro.app')
   sleep(0.3)
   hs.eventtap.keyStrokes("d "..selectedtxt)
+end
+
+
+function changeVolume(diff)
+  return function()
+    local current = hs.audiodevice.defaultOutputDevice():volume()
+    local new = math.min(100, math.max(0, math.floor(current + diff)))
+    if new > 0 then
+      hs.audiodevice.defaultOutputDevice():setMuted(false)
+    end
+    hs.alert.closeAll(0.0)
+    hs.alert.show("Volume " .. new .. "%", {}, 0.5)
+    hs.audiodevice.defaultOutputDevice():setVolume(new)
   end
+end
+
+hs.hotkey.bind({"cmd", "ctrl"}, "End",changeVolume(-100))
+
+hs.hotkey.bind({"cmd", "ctrl"}, "Up",changeVolume(2))
+
+hs.hotkey.bind({"cmd", "ctrl"}, "Down",changeVolume(-2))
+
 
 -- function handleWifiWatcher(watcher,eventType,interface)
 --   if eventType == "SSIDChange" then
