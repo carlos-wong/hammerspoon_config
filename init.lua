@@ -18,6 +18,7 @@ local key2App = {
   e = {'/Applications/Emacs.app', 'English', 2, "org.gnu.Emacs"},
   c = {'/Applications/Google Chrome.app', '', 2},
   w = {'/Users/carlos/Applications/WeChat.app', 'Chinese', 1},
+  u = {'/Applications/Unity/Hub/Editor/2020.3.1f1c1/Unity.app', 'Chinese', 1},
   -- m = {'/Applications/Mattermost.app', 'Chinese', 1},
   t = {'/Users/carlos/Applications/TickTick.app', 'Chinese', 1},
   f = {'/System/Library/CoreServices/Finder.app', 'English', 1},
@@ -182,9 +183,9 @@ end
 
 
 
-hs.hotkey.bind({"cmd", "ctrl"}, "Right",rightSize)
+hs.hotkey.bind({"cmd", "ctrl"}, "Right",leftSize)
 
-hs.hotkey.bind({"cmd", "ctrl"}, "Left",leftSize)
+hs.hotkey.bind({"cmd", "ctrl"}, "Left",rightSize)
 
 
 
@@ -343,9 +344,20 @@ function toggleApplication(app)
         mainwin:application():activate(true)
         mainwin:application():unhide()
         mainwin:focus()
+
       end
       local appwindowsframe = app:focusedWindow():frame();
-      hs.mouse.setAbsolutePosition({x=appwindowsframe.x+appwindowsframe.w/2, y=appwindowsframe.y + appwindowsframe.h/2})
+      hs.mouse.absolutePosition({x=appwindowsframe.x, y=appwindowsframe.y})
+      local overlay = hs.drawing.rectangle(hs.geometry(appwindowsframe.x, appwindowsframe.y, appwindowsframe.w, appwindowsframe.h))
+      overlay:setStrokeColor(hs.drawing.color.asRGB({red=1.0,green=0.0,blue=1.0}))
+      overlay:setStrokeWidth(25)
+      overlay:setAlpha(0.3)
+      overlay:setFill(nil)
+      overlay:show()
+      hs.timer.doAfter(0.268, function ()
+                         overlay:delete()                
+      end)
+
     else
       -- Start application if application is hide.
       if app:hide() then
@@ -405,11 +417,11 @@ function changeVolume(diff)
   end
 end
 
-hs.hotkey.bind({"cmd", "ctrl"}, "End",changeVolume(-100))
+hs.hotkey.bind({"alt", "ctrl"}, "End",changeVolume(-100))
 
-hs.hotkey.bind({"cmd", "ctrl"}, "Up",changeVolume(2))
+hs.hotkey.bind({"alt", "ctrl"}, "Up",changeVolume(2))
 
-hs.hotkey.bind({"cmd", "ctrl"}, "Down",changeVolume(-2))
+hs.hotkey.bind({"alt", "ctrl"}, "Down",changeVolume(-2))
 
 
 -- function handleWifiWatcher(watcher,eventType,interface)
