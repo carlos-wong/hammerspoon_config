@@ -17,15 +17,16 @@ local key2App = {
   i = {'/Applications/iTerm.app', 'English', 2},
   e = {'/Applications/Emacs.app', 'English', 2, "org.gnu.Emacs"},
   c = {'/Applications/Google Chrome.app', '', 2},
-  w = {'/Users/carlos/Applications/WeChat.app', 'Chinese', 1},
-  u = {'/Applications/Unity/Hub/Editor/2020.3.1f1c1/Unity.app', 'Chinese', 1},
+  w = {'/Applications/WeChat.app', 'Chinese', 1},
+  -- u = {'/Applications/Unity/Hub/Editor/2020.3.1f1c1/Unity.app', 'Chinese', 1},
   -- m = {'/Applications/Mattermost.app', 'Chinese', 1},
-  t = {'/Users/carlos/Applications/TickTick.app', 'Chinese', 1},
+  t = {'/Applications/TickTick.app', 'Chinese', 1},
   f = {'/System/Library/CoreServices/Finder.app', 'English', 1},
   s = {'/Applications/System Preferences.app', 'English', 1},
   a = {'/Applications/Android Studio.app', 'English', 1},
   s = {'/Applications/Skim.app', 'English', 1},
-  m = {'/Users/carlos/Applications/Microsoft Remote Desktop Beta.app','English',1},
+  m = {'/Applications/Microsoft Remote Desktop Beta.app','English',1},
+  q = {'/Applications/企业微信.app','Chinese',1},
   -- f20 = {'/Applications/NeteaseMusic.app','English',1},
   -- f20 = {'/Applications/QQMusic.app','English',1},
 }
@@ -348,15 +349,16 @@ function toggleApplication(app)
       end
       local appwindowsframe = app:focusedWindow():frame();
       hs.mouse.absolutePosition({x=appwindowsframe.x, y=appwindowsframe.y})
-      local overlay = hs.drawing.rectangle(hs.geometry(appwindowsframe.x, appwindowsframe.y, appwindowsframe.w, appwindowsframe.h))
-      overlay:setStrokeColor(hs.drawing.color.asRGB({red=1.0,green=0.0,blue=1.0}))
-      overlay:setStrokeWidth(25)
-      overlay:setAlpha(0.3)
-      overlay:setFill(nil)
-      overlay:show()
-      hs.timer.doAfter(0.268, function ()
-                         overlay:delete()                
-      end)
+
+      -- local overlay = hs.drawing.rectangle(hs.geometry(appwindowsframe.x, appwindowsframe.y, appwindowsframe.w, appwindowsframe.h))
+      -- overlay:setStrokeColor(hs.drawing.color.asRGB({red=1.0,green=0.0,blue=1.0}))
+      -- overlay:setStrokeWidth(25)
+      -- overlay:setAlpha(0.3)
+      -- overlay:setFill(nil)
+      -- overlay:show()
+      -- hs.timer.doAfter(0.500, function ()
+      --                    overlay:delete()                
+      -- end)
 
     else
       -- Start application if application is hide.
