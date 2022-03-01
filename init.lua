@@ -258,7 +258,11 @@ end)
 hs.urlevent.bind("CarlosAlert", function(eventName, params)
                    print(hs.screen.allScreens())
                    for k, select_screen in pairs(hs.screen.allScreens()) do
-                     hs.alert.show(params.message,{atScreenEdge=0,fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,3.618)
+                     hs.alert.show(params.message,{atScreenEdge=1,
+                                                   fadeInDuration = 0.15,
+                                                   fadeOutDuration = 0.15,
+                                                   textSize = 18,
+                                                   fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,2.618)
                    end
 end)
 
