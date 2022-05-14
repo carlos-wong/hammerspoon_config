@@ -20,10 +20,10 @@ local key2App = {
   w = {'/Applications/WeChat.app', 'Chinese', 1},
   -- u = {'/Applications/Unity/Hub/Editor/2020.3.1f1c1/Unity.app', 'Chinese', 1},
   -- m = {'/Applications/Mattermost.app', 'Chinese', 1},
-  t = {'/Applications/TickTick.app', 'Chinese', 1},
+  t = {'/Applications/Todoist.app', 'Chinese', 1},
   f = {'/System/Library/CoreServices/Finder.app', 'English', 1},
   s = {'/Applications/System Preferences.app', 'English', 1},
-  a = {'/Applications/Android Studio.app', 'English', 1},
+  -- a = {'/Applications/Android Studio.app', 'English', 1},
   s = {'/Applications/Skim.app', 'English', 1},
   m = {'/Applications/Microsoft Remote Desktop Beta.app','English',1},
   q = {'/Applications/企业微信.app','Chinese',1},
@@ -260,7 +260,7 @@ hs.urlevent.bind("CarlosAlert", function(eventName, params)
                    for k, select_screen in pairs(hs.screen.allScreens()) do
                      hs.alert.show(params.message,{atScreenEdge=1,
                                                    fadeInDuration = 0.15,
-                                                   fadeOutDuration = 0.15,
+                                                   fadeOutDuration = 5.15,
                                                    textSize = 18,
                                                    fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,2.618)
                    end
@@ -351,8 +351,8 @@ function toggleApplication(app)
         mainwin:focus()
 
       end
-      local appwindowsframe = app:focusedWindow():frame();
-      hs.mouse.absolutePosition({x=appwindowsframe.x, y=appwindowsframe.y})
+      -- local appwindowsframe = app:focusedWindow():frame();
+      -- hs.mouse.absolutePosition({x=appwindowsframe.x, y=appwindowsframe.y})
 
       -- local overlay = hs.drawing.rectangle(hs.geometry(appwindowsframe.x, appwindowsframe.y, appwindowsframe.w, appwindowsframe.h))
       -- overlay:setStrokeColor(hs.drawing.color.asRGB({red=1.0,green=0.0,blue=1.0}))
