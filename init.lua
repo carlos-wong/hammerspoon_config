@@ -18,7 +18,7 @@ local key2App = {
   e = {'/Applications/Emacs.app', 'English', 2, "org.gnu.Emacs"},
   c = {'/Applications/Google Chrome.app', '', 2},
   w = {'/Applications/WeChat.app', 'Chinese', 1},
-  -- u = {'/Applications/Unity/Hub/Editor/2020.3.1f1c1/Unity.app', 'Chinese', 1},
+  u = {'/Applications/Unity/Hub/Editor/2021.3.11f1/Unity.app', 'Chinese', 1},
   -- m = {'/Applications/Mattermost.app', 'Chinese', 1},
   t = {'/Applications/Todoist.app', 'Chinese', 1},
   f = {'/System/Library/CoreServices/Finder.app', 'English', 1},
@@ -27,6 +27,7 @@ local key2App = {
   s = {'/Applications/Skim.app', 'English', 1},
   m = {'/Applications/Microsoft Remote Desktop Beta.app','English',1},
   q = {'/Applications/企业微信.app','Chinese',1},
+  r = {'/Applications/微信读书.app','Chinese',1},
   -- f20 = {'/Applications/NeteaseMusic.app','English',1},
   -- f20 = {'/Applications/QQMusic.app','English',1},
 }
