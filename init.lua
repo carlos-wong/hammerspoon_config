@@ -31,6 +31,11 @@ local key2App = {
   -- f20 = {'/Applications/QQMusic.app','English',1},
 }
 
+function getConnectWifiSsid()
+	local wifi_info = hs.wifi.currentNetwork("en0")
+  return wifi_info
+end
+
 function findApplication(app)
   local appPath = app[1]
   local inputMethod = app[2]
@@ -88,7 +93,7 @@ function fullscreen()
   win:setFrame(f)
 end
 
-hs.hotkey.bind({"cmd", "ctrl"}, "Up", fullscreen)
+-- hs.hotkey.bind({"cmd", "ctrl"}, "Up", fullscreen)
 hs.hotkey.bind({"cmd", "shift"}, "Up", fullscreen)
 
 
@@ -183,10 +188,9 @@ function leftSize()
 end
 
 
+hs.hotkey.bind({"cmd", "shift"}, "Right",leftSize)
 
-hs.hotkey.bind({"cmd", "ctrl"}, "Right",leftSize)
-
-hs.hotkey.bind({"cmd", "ctrl"}, "Left",rightSize)
+hs.hotkey.bind({"cmd", "shift"}, "Left",rightSize)
 
 
 
@@ -238,6 +242,12 @@ hs.urlevent.bind("CarlosCtrlApps",function(eventName, params)
 end)
 
 
+hs.urlevent.bind("CarlosWifiSSID",function(eventName, params)
+                   local wifissid = getConnectWifiSsid()
+                   hs.json.write({wifi=wifissid},"/tmp/carlos_wifissid")
+end)
+
+
 hs.urlevent.bind("CarlosCtrlMusicApps",function(eventName, params)
                    if params.type == "Netease" then
                      local app = findApplication({'/Applications/NeteaseMusic.app','English',1})
@@ -258,7 +268,7 @@ end)
 hs.urlevent.bind("CarlosAlert", function(eventName, params)
                    print(hs.screen.allScreens())
                    for k, select_screen in pairs(hs.screen.allScreens()) do
-                     hs.alert.show(params.message,{atScreenEdge=1,
+                     hs.alert.show(params.message,{atScreenEdge=0,
                                                    fadeInDuration = 0.15,
                                                    fadeOutDuration = 5.15,
                                                    textSize = 18,
@@ -351,9 +361,9 @@ function toggleApplication(app)
         mainwin:focus()
 
       end
-      -- local appwindowsframe = app:focusedWindow():frame();
-      -- hs.mouse.absolutePosition({x=appwindowsframe.x, y=appwindowsframe.y})
-
+      local appwindowsframe = app:focusedWindow():frame();
+      hs.mouse.absolutePosition({x=appwindowsframe.x+appwindowsframe.w/2, y=appwindowsframe.y+appwindowsframe.h/2})
+      -- hs.mouse.setRelativePosition({x=0,y=0})
       -- local overlay = hs.drawing.rectangle(hs.geometry(appwindowsframe.x, appwindowsframe.y, appwindowsframe.w, appwindowsframe.h))
       -- overlay:setStrokeColor(hs.drawing.color.asRGB({red=1.0,green=0.0,blue=1.0}))
       -- overlay:setStrokeWidth(25)
