@@ -436,11 +436,11 @@ function changeVolume(diff)
   end
 end
 
-hs.hotkey.bind({"alt", "ctrl"}, "End",changeVolume(-100))
+hs.hotkey.bind({"ctrl", "cmd"}, "End",changeVolume(-100))
 
-hs.hotkey.bind({"alt", "ctrl"}, "Up",changeVolume(2))
+hs.hotkey.bind({"ctrl", "cmd"}, "Up",changeVolume(2))
 
-hs.hotkey.bind({"alt", "ctrl"}, "Down",changeVolume(-2))
+hs.hotkey.bind({"ctrl", "cmd"}, "Down",changeVolume(-2))
 
 function Spoitfy_next_song()
   app = findApplication({'/Applications/Spotify.app','English',1})
