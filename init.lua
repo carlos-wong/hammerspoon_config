@@ -8,6 +8,8 @@ local hotkey = require 'hs.hotkey'
 local layout = require 'hs.layout'
 local window = require 'hs.window'
 local speech = require 'hs.speech'
+local spotify = require 'hs.spotify'
+
 
 
 local hyper = {'ctrl', 'cmd'}
@@ -443,23 +445,34 @@ hs.hotkey.bind({"alt", "ctrl"}, "Down",changeVolume(-2))
 function Spoitfy_next_song()
   app = findApplication({'/Applications/Spotify.app','English',1})
   if app then
-    app:selectMenuItem({"播放", "下一首"})
+    hs.spotify.next()
   end
 end
 
 function Spoitfy_prev_song()
   app = findApplication({'/Applications/Spotify.app','English',1})
   if app then
-    app:selectMenuItem({"播放", "上一首"})
+    hs.spotify.previous()
   end
 end
 
 function Spoitfy_like_song()
   app = findApplication({'/Applications/Spotify.app','English',1})
-	hs.eventtap.keyStroke({"option", "shift"}, "b", app)
+  if app  then
+    hs.eventtap.keyStroke({"option", "shift"}, "b", app)
+  end
 end
 
+function Spoitfy_toggle_play_or_stop()
+  app = findApplication({'/Applications/Spotify.app','English',1})
+  if app then
+    hs.spotify.playpause()
+  end
+end
+
+
 hs.hotkey.bind({"ctrl", "cmd"}, "l",Spoitfy_like_song)
+hs.hotkey.bind({"ctrl", "cmd"}, "space",Spoitfy_toggle_play_or_stop)
 hs.hotkey.bind({"ctrl", "cmd"}, "Left",Spoitfy_prev_song)
 hs.hotkey.bind({"ctrl", "cmd"}, "Right",Spoitfy_next_song)
 
