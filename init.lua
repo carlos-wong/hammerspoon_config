@@ -436,11 +436,11 @@ function changeVolume(diff)
   end
 end
 
-hs.hotkey.bind({"ctrl", "cmd"}, "End",changeVolume(-100))
+hs.hotkey.bind({"ctrl", "alt"}, "End",changeVolume(-100))
 
-hs.hotkey.bind({"ctrl", "cmd"}, "Up",changeVolume(2),nil,changeVolume(2))
+hs.hotkey.bind({"ctrl", "alt"}, "Up",changeVolume(2),nil,changeVolume(2))
 
-hs.hotkey.bind({"ctrl", "cmd"}, "Down",changeVolume(-2),nil,changeVolume(-2))
+hs.hotkey.bind({"ctrl", "alt"}, "Down",changeVolume(-2),nil,changeVolume(-2))
 
 function Spoitfy_next_song()
   app = findApplication({'/Applications/Spotify.app','English',1})
@@ -471,10 +471,10 @@ function Spoitfy_toggle_play_or_stop()
 end
 
 
-hs.hotkey.bind({"ctrl", "cmd"}, "l",Spoitfy_like_song)
-hs.hotkey.bind({"ctrl", "cmd"}, "space",Spoitfy_toggle_play_or_stop)
-hs.hotkey.bind({"ctrl", "cmd"}, "Left",Spoitfy_prev_song)
-hs.hotkey.bind({"ctrl", "cmd"}, "Right",Spoitfy_next_song)
+hs.hotkey.bind({"ctrl", "alt"}, "l",Spoitfy_like_song)
+hs.hotkey.bind({"ctrl", "alt"}, "space",Spoitfy_toggle_play_or_stop)
+hs.hotkey.bind({"ctrl", "alt"}, "Left",Spoitfy_prev_song)
+hs.hotkey.bind({"ctrl", "alt"}, "Right",Spoitfy_next_song)
 
 
 -- function handleWifiWatcher(watcher,eventType,interface)
