@@ -440,6 +440,29 @@ hs.hotkey.bind({"alt", "ctrl"}, "Up",changeVolume(2))
 
 hs.hotkey.bind({"alt", "ctrl"}, "Down",changeVolume(-2))
 
+function Spoitfy_next_song()
+  app = findApplication({'/Applications/Spotify.app','English',1})
+  if app then
+    app:selectMenuItem({"播放", "下一首"})
+  end
+end
+
+function Spoitfy_prev_song()
+  app = findApplication({'/Applications/Spotify.app','English',1})
+  if app then
+    app:selectMenuItem({"播放", "上一首"})
+  end
+end
+
+function Spoitfy_like_song()
+  app = findApplication({'/Applications/Spotify.app','English',1})
+	hs.eventtap.keyStroke({"option", "shift"}, "b", app)
+end
+
+hs.hotkey.bind({"ctrl", "cmd"}, "l",Spoitfy_like_song)
+hs.hotkey.bind({"ctrl", "cmd"}, "Left",Spoitfy_prev_song)
+hs.hotkey.bind({"ctrl", "cmd"}, "Right",Spoitfy_next_song)
+
 
 -- function handleWifiWatcher(watcher,eventType,interface)
 --   if eventType == "SSIDChange" then
