@@ -438,9 +438,9 @@ end
 
 hs.hotkey.bind({"ctrl", "cmd"}, "End",changeVolume(-100))
 
-hs.hotkey.bind({"ctrl", "cmd"}, "Up",changeVolume(2))
+hs.hotkey.bind({"ctrl", "cmd"}, "Up",changeVolume(2),nil,changeVolume(2))
 
-hs.hotkey.bind({"ctrl", "cmd"}, "Down",changeVolume(-2))
+hs.hotkey.bind({"ctrl", "cmd"}, "Down",changeVolume(-2),nil,changeVolume(-2))
 
 function Spoitfy_next_song()
   app = findApplication({'/Applications/Spotify.app','English',1})
