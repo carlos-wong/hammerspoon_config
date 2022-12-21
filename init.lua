@@ -426,7 +426,13 @@ end
 function changeVolume(diff)
   return function()
     local current = hs.audiodevice.defaultOutputDevice():volume()
-    local new = math.min(100, math.max(0, math.floor(current + diff)))
+    local new = 0
+    if diff > 0 then
+      new = math.min(100, math.max(0, math.ceil(current + diff)))
+    else
+      new = math.min(100, math.max(0, math.floor(current + diff)))
+    end
+
     if new > 0 then
       hs.audiodevice.defaultOutputDevice():setMuted(false)
     end
@@ -438,9 +444,9 @@ end
 
 hs.hotkey.bind({"ctrl", "alt"}, "End",changeVolume(-100))
 
-hs.hotkey.bind({"ctrl", "alt"}, "Up",changeVolume(2),nil,changeVolume(2))
+hs.hotkey.bind({"ctrl", "alt"}, "Up",changeVolume(1),nil,changeVolume(2))
 
-hs.hotkey.bind({"ctrl", "alt"}, "Down",changeVolume(-2),nil,changeVolume(-2))
+hs.hotkey.bind({"ctrl", "alt"}, "Down",changeVolume(-1),nil,changeVolume(-2))
 
 function Spoitfy_next_song()
   app = findApplication({'/Applications/Spotify.app','English',1})
