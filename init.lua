@@ -278,6 +278,7 @@ hs.urlevent.bind("CarlosAlert", function(eventName, params)
                                                    fadeOutDuration = 5.15,
                                                    textSize = 18,
                                                    fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,2.618)
+                     drawRectangle(2)
                    end
 end)
 
@@ -476,6 +477,26 @@ function Spoitfy_toggle_play_or_stop()
   if app then
     hs.spotify.playpause()
   end
+end
+
+function drawRectangle(duration)
+  -- Get the focused screen
+  local screen = hs.screen.mainScreen()
+
+  -- Get the frame of the screen
+  local frame = screen:frame()
+
+  -- Create a new rectangle with a red border and transparent fill
+  local rect = hs.drawing.rectangle(hs.geometry.rect(frame.x, frame.y, frame.w, frame.h))
+  rect:setStrokeColor({["red"]=1,["blue"]=0,["green"]=0,["alpha"]=1})
+  rect:setFill(false)
+  rect:setStrokeWidth(5)
+
+  -- Show the rectangle
+  rect:show()
+
+  -- Set a timer to hide the rectangle after the given duration
+  hs.timer.doAfter(duration, function() rect:delete() end)
 end
 
 
