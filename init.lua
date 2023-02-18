@@ -275,7 +275,7 @@ hs.urlevent.bind("CarlosAlert", function(eventName, params)
                    for k, select_screen in pairs(hs.screen.allScreens()) do
                      hs.alert.show(params.message,{atScreenEdge=0,
                                                    fadeInDuration = 0.15,
-                                                   fadeOutDuration = 5.15,
+                                                   fadeOutDuration = 1.85,
                                                    textSize = 18,
                                                    fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,2.618)
                      drawRectangle(2)
@@ -336,6 +336,19 @@ function launchApp(appPath)
   end
 end
 
+function drawBorderOnfocusedWindow()
+  local win = hs.window.focusedWindow()
+  local f = win:frame()
+  local focuseWindowBorder = hs.drawing.rectangle(f)
+  focuseWindowBorder:setStrokeColor({["red"]=0.259,["blue"]=0.545,["green"]=0.792,["alpha"]=1})
+  focuseWindowBorder:setStrokeWidth(6)
+  focuseWindowBorder:setRoundedRectRadii(4, 4)
+  focuseWindowBorder:setFill(false)
+  focuseWindowBorder:show()
+
+  hs.timer.doAfter(0.618, function() focuseWindowBorder:delete() end)
+end
+
 function toggleApplication(app)
   local appPath = app[1]
   local inputMethod = app[2]
@@ -387,7 +400,7 @@ function toggleApplication(app)
       end
     end
   end
-
+  drawBorderOnfocusedWindow()
   -- if setInputMethod then
   --   if inputMethod == 'English' then
   --     English()
@@ -498,6 +511,7 @@ function drawRectangle(duration)
   -- Set a timer to hide the rectangle after the given duration
   hs.timer.doAfter(duration, function() rect:delete() end)
 end
+
 
 
 hs.hotkey.bind({"ctrl", "alt"}, "l",Spoitfy_like_song)
