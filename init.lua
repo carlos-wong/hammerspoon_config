@@ -347,6 +347,7 @@ function drawBorderOnfocusedWindow()
   focuseWindowBorder:show()
 
   hs.timer.doAfter(0.618, function() focuseWindowBorder:delete() end)
+
 end
 
 function toggleApplication(app)
@@ -400,7 +401,6 @@ function toggleApplication(app)
       end
     end
   end
-  drawBorderOnfocusedWindow()
   -- if setInputMethod then
   --   if inputMethod == 'English' then
   --     English()
@@ -519,6 +519,16 @@ hs.hotkey.bind({"ctrl", "alt"}, "space",Spoitfy_toggle_play_or_stop)
 hs.hotkey.bind({"ctrl", "alt"}, "Left",Spoitfy_prev_song)
 hs.hotkey.bind({"ctrl", "alt"}, "Right",Spoitfy_next_song)
 
+local wf = hs.window.filter.new()
+
+-- Set up a callback function to handle window focus events
+wf:subscribe(hs.window.filter.windowFocused, function(window, appName)
+               -- Get the title of the focused window
+               local title = window:title()
+               drawBorderOnfocusedWindow()
+               -- Print the title of the focused window to the console
+               print("Window focused: " .. title)
+end)
 
 -- function handleWifiWatcher(watcher,eventType,interface)
 --   if eventType == "SSIDChange" then
