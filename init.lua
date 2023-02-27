@@ -17,7 +17,7 @@ local hyper = {'ctrl', 'cmd'}
 -- 1 is auto switch hide/unhide for the app
 local key2App = {
   i = {'/Applications/iTerm.app', 'English', 2},
-  e = {'/Applications/Emacs.app', 'English', 2, "org.gnu.Emacs"},
+  e = {'/Applications/Emacs.app', 'English', 2},
   c = {'/Applications/Google Chrome.app', '', 2},
   w = {'/Applications/WeChat.app', 'Chinese', 1},
   -- u = {'/Applications/Unity/Hub/Editor/2021.3.11f1/Unity.app', 'Chinese', 1},
@@ -49,15 +49,27 @@ function findApplication(app)
   if app[4] then
     appBundleId = app[4]
   end
-  local apps = application.runningApplications()
-  for i = 1, #apps do
-    local app = apps[i]
-    if app:path() == appPath or app:bundleID() == appBundleId then
+
+  local apps = hs.application.runningApplications()
+
+  for _, app in ipairs(apps) do
+    if app:path() == appPath then
       return app
     end
   end
-
   return nil
+
+  -- for i = 1, #apps do
+  --   local app = apps[i]
+  --   print("keep find runnning app")
+  --   -- print("searching " ..app:path().." ")
+  --   if app:path() == appPath then
+  --     print("Find running app: "..appPath)
+  --     return app
+  --   end
+  -- end
+
+  -- return nil
 end
 
 
@@ -239,8 +251,6 @@ hs.hotkey.bind({"cmd","ctrl"}, "V", function() hs.eventtap.keyStrokes(hs.pastebo
 
 hs.urlevent.bind("CarlosCtrlApps",function(eventName, params)
                    local app = findApplication({params.appPath,'English',1})
-                   print(params.appPath)
-                   print(inspect(app))
                    if app then
                      app:selectMenuItem({params.firstitem, params.seconditem})
                    end
@@ -271,14 +281,13 @@ hs.urlevent.bind("CarlosCtrlMusicApps",function(eventName, params)
 end)
 
 hs.urlevent.bind("CarlosAlert", function(eventName, params)
-                   print(hs.screen.allScreens())
                    for k, select_screen in pairs(hs.screen.allScreens()) do
                      hs.alert.show(params.message,{atScreenEdge=0,
                                                    fadeInDuration = 0.15,
                                                    fadeOutDuration = 1.85,
                                                    textSize = 18,
                                                    fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,2.618)
-                     drawRectangle(2)
+                     -- drawRectangle(2)
                    end
 end)
 
@@ -336,30 +345,17 @@ function launchApp(appPath)
   end
 end
 
-function drawBorderOnfocusedWindow()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  local focuseWindowBorder = hs.drawing.rectangle(f)
-  focuseWindowBorder:setStrokeColor({["red"]=0.259,["blue"]=0.545,["green"]=0.792,["alpha"]=1})
-  focuseWindowBorder:setStrokeWidth(6)
-  focuseWindowBorder:setRoundedRectRadii(4, 4)
-  focuseWindowBorder:setFill(false)
-  focuseWindowBorder:show()
-
-  hs.timer.doAfter(0.618, function() focuseWindowBorder:delete() end)
-
-end
-
 function toggleApplication(app)
   local appPath = app[1]
   local inputMethod = app[2]
   local switchide = app[3]
-
+  -- print("toggleApplication called")
   -- Tag app path use for `applicationWatcher'.
   startAppPath = appPath
 
   local app = findApplication(app)
-  local setInputMethod = true
+  -- local setInputMethod = true
+
   if not app then
     -- Application not running, launch app
     launchApp(appPath)
@@ -381,8 +377,8 @@ function toggleApplication(app)
         mainwin:focus()
 
       end
-      local appwindowsframe = app:focusedWindow():frame();
-      hs.mouse.absolutePosition({x=appwindowsframe.x+appwindowsframe.w/2, y=appwindowsframe.y+appwindowsframe.h/2})
+      -- local appwindowsframe = app:focusedWindow():frame();
+      -- hs.mouse.absolutePosition({x=appwindowsframe.x+appwindowsframe.w/2, y=appwindowsframe.y+appwindowsframe.h/2})
       -- hs.mouse.setRelativePosition({x=0,y=0})
       -- local overlay = hs.drawing.rectangle(hs.geometry(appwindowsframe.x, appwindowsframe.y, appwindowsframe.w, appwindowsframe.h))
       -- overlay:setStrokeColor(hs.drawing.color.asRGB({red=1.0,green=0.0,blue=1.0}))
@@ -402,11 +398,11 @@ function toggleApplication(app)
     end
   end
   -- if setInputMethod then
-  --   if inputMethod == 'English' then
-  --     English()
-  --   else
-  --     Chinese()
-  --   end
+    -- if inputMethod == 'English' then
+    --   English()
+    -- else
+    --   Chinese()
+    -- end
   -- end
 end
 
@@ -492,26 +488,6 @@ function Spoitfy_toggle_play_or_stop()
   end
 end
 
-function drawRectangle(duration)
-  -- Get the focused screen
-  local screen = hs.screen.mainScreen()
-
-  -- Get the frame of the screen
-  local frame = screen:frame()
-
-  -- Create a new rectangle with a red border and transparent fill
-  local rect = hs.drawing.rectangle(hs.geometry.rect(frame.x, frame.y, frame.w, frame.h))
-  rect:setStrokeColor({["red"]=1,["blue"]=0,["green"]=0,["alpha"]=1})
-  rect:setFill(false)
-  rect:setStrokeWidth(5)
-
-  -- Show the rectangle
-  rect:show()
-
-  -- Set a timer to hide the rectangle after the given duration
-  hs.timer.doAfter(duration, function() rect:delete() end)
-end
-
 
 
 hs.hotkey.bind({"ctrl", "alt"}, "l",Spoitfy_like_song)
@@ -519,16 +495,12 @@ hs.hotkey.bind({"ctrl", "alt"}, "space",Spoitfy_toggle_play_or_stop)
 hs.hotkey.bind({"ctrl", "alt"}, "Left",Spoitfy_prev_song)
 hs.hotkey.bind({"ctrl", "alt"}, "Right",Spoitfy_next_song)
 
-local wf = hs.window.filter.new()
+-- local wf = hs.window.filter.new()
 
 -- Set up a callback function to handle window focus events
-wf:subscribe(hs.window.filter.windowFocused, function(window, appName)
-               -- Get the title of the focused window
-               local title = window:title()
-               drawBorderOnfocusedWindow()
-               -- Print the title of the focused window to the console
-               print("Window focused: " .. title)
-end)
+-- wf:subscribe(hs.window.filter.windowFocused, function(window, appName)
+--                drawBorderOnfocusedWindow()
+-- end)
 
 -- function handleWifiWatcher(watcher,eventType,interface)
 --   if eventType == "SSIDChange" then
