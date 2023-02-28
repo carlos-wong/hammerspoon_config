@@ -345,17 +345,27 @@ function launchApp(appPath)
   end
 end
 
+function dump(o)
+  if type(o) == 'table' then
+    local s = '{ '
+    for k,v in pairs(o) do
+      if type(k) ~= 'number' then k = '"'..k..'"' end
+      s = s .. '['..k..'] = ' .. dump(v) .. ','
+    end
+    return s .. '} '
+  else
+    return tostring(o)
+  end
+end
+
+
 function toggleApplication(app)
   local appPath = app[1]
   local inputMethod = app[2]
   local switchide = app[3]
-  -- print("toggleApplication called")
-  -- Tag app path use for `applicationWatcher'.
   startAppPath = appPath
-
-  local app = findApplication(app)
-  -- local setInputMethod = true
-
+  local app_info = hs.application.infoForBundlePath(appPath)
+  app = hs.application.get(app_info["CFBundleIdentifier"])
   if not app then
     -- Application not running, launch app
     launchApp(appPath)
@@ -368,7 +378,7 @@ function toggleApplication(app)
         if switchide == 1 then
           mainwin:application():hide()
         end
-        setInputMethod = false
+        -- setInputMethod = false
         -- updateFocusAppInputMethod()
       else
         -- Focus target application if it not at frontmost.
