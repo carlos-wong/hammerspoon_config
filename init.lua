@@ -365,7 +365,10 @@ function toggleApplication(app)
   local switchide = app[3]
   startAppPath = appPath
   local app_info = hs.application.infoForBundlePath(appPath)
-  app = hs.application.get(app_info["CFBundleIdentifier"])
+  if app_info then
+    app = hs.application.get(app_info["CFBundleIdentifier"])
+  end
+
   if not app then
     -- Application not running, launch app
     launchApp(appPath)
@@ -523,3 +526,4 @@ hs.hotkey.bind({"ctrl", "alt"}, "Right",Spoitfy_next_song)
 -- hs.wifi.watcher.new(handleWifiWatcher):watchingFor("SSIDChange"):start()
 -- hs.caffeinate.watcher.new(handle_wifi_watcher):start()
 
+hs.application.enableSpotlightForNameSearches(true)
