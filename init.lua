@@ -351,10 +351,12 @@ function dump(o)
 end
 
 
+
 function toggleApplication(app)
   local appPath = app[1]
   local inputMethod = app[2]
   local switchide = app[3]
+  setInputMethod = true
 
   if not appPath then
     return
@@ -369,7 +371,12 @@ function toggleApplication(app)
 
   if not app then
     -- Application not running, launch app
-    launchApp(appPath)
+    if appPath then
+      launchApp(appPath)
+    else
+      return
+    end
+
   else
     -- Application running, toggle hide/unhide
     local mainwin = app:mainWindow()
@@ -379,7 +386,6 @@ function toggleApplication(app)
         if switchide == 1 then
           mainwin:application():hide()
         end
-        -- setInputMethod = false
         -- updateFocusAppInputMethod()
       else
         -- Focus target application if it not at frontmost.
@@ -408,13 +414,13 @@ function toggleApplication(app)
       end
     end
   end
-  -- if setInputMethod then
-    -- if inputMethod == 'English' then
-    --   English()
-    -- else
-    --   Chinese()
-    -- end
-  -- end
+  if setInputMethod then
+    if inputMethod == 'English' then
+      English()
+    else
+      Chinese()
+    end
+  end
 end
 
 -- Start or focus application.
