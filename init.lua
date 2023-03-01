@@ -49,27 +49,19 @@ function findApplication(app)
   if app[4] then
     appBundleId = app[4]
   end
-
-  local apps = hs.application.runningApplications()
-
-  for _, app in ipairs(apps) do
-    if app:path() == appPath then
+  if not appPath then
+    return nil
+  end
+  local app_info = hs.application.infoForBundlePath(appPath)
+  if app_info then
+    app = hs.application.get(app_info["CFBundleIdentifier"])
+    if app then
       return app
     end
   end
+
   return nil
 
-  -- for i = 1, #apps do
-  --   local app = apps[i]
-  --   print("keep find runnning app")
-  --   -- print("searching " ..app:path().." ")
-  --   if app:path() == appPath then
-  --     print("Find running app: "..appPath)
-  --     return app
-  --   end
-  -- end
-
-  -- return nil
 end
 
 
@@ -363,7 +355,13 @@ function toggleApplication(app)
   local appPath = app[1]
   local inputMethod = app[2]
   local switchide = app[3]
+
+  if not appPath then
+    return
+  end
+
   startAppPath = appPath
+
   local app_info = hs.application.infoForBundlePath(appPath)
   if app_info then
     app = hs.application.get(app_info["CFBundleIdentifier"])
