@@ -9,7 +9,7 @@ local layout = require 'hs.layout'
 local window = require 'hs.window'
 local speech = require 'hs.speech'
 local spotify = require 'hs.spotify'
-
+local wf = hs.window.filter.new()
 
 
 local hyper = {'ctrl', 'cmd'}
@@ -108,6 +108,9 @@ hs.hotkey.bind({"cmd", "shift"}, "Up", fullscreen)
 
 function rightSize()
   local win = hs.window.focusedWindow()
+  if not win then
+    return
+  end
   local f = win:frame()
   local screen = win:screen()
   local screenframe = screen:frame()
@@ -151,6 +154,9 @@ end
 
 function leftSize()
   local win = hs.window.focusedWindow()
+  if not win then
+    return
+  end
   local f = win:frame()
   local screen = win:screen()
   local screenframe = screen:frame()
@@ -512,22 +518,36 @@ hs.hotkey.bind({"ctrl", "alt"}, "space",Spoitfy_toggle_play_or_stop)
 hs.hotkey.bind({"ctrl", "alt"}, "Left",Spoitfy_prev_song)
 hs.hotkey.bind({"ctrl", "alt"}, "Right",Spoitfy_next_song)
 
--- local wf = hs.window.filter.new()
+local function drawBorderOnfocusedWindow()
+  local win = hs.window.focusedWindow()
+  local f = win:frame()
+  local fx = f.x
+  local fy = f.y
+  local fw = f.w
+  local fh = f.h
 
--- Set up a callback function to handle window focus events
--- wf:subscribe(hs.window.filter.windowFocused, function(window, appName)
---                drawBorderOnfocusedWindow()
--- end)
+  -- Create a rectangle object and set its attributes
+  local rect = hs.drawing.rectangle(hs.geometry.rect(fx, fy, fw, fh))
+  rect:setStrokeWidth(3)
+  rect:setStrokeColor({["red"]=0.259,["blue"]=0.545,["green"]=0.792,["alpha"]=1})
+  rect:setFill(false)
+  rect:setLevel(hs.drawing.windowLevels.overlay)
+  rect:setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
 
--- function handleWifiWatcher(watcher,eventType,interface)
---   if eventType == "SSIDChange" then
---     if hs.wifi.currentNetwork(interface) == "Mrwhite" then
---       hs.execute("open /Users/carlos/ownCloud/carlos_data/system-config/tools/auto-mount-afs-when-cnnect-Mrwhite.app")
---     end
---   end
+  -- Show the rectangle object
+  rect:show()
 
--- end
--- hs.wifi.watcher.new(handleWifiWatcher):watchingFor("SSIDChange"):start()
--- hs.caffeinate.watcher.new(handle_wifi_watcher):start()
+  -- Remove the rectangle object after 2 seconds
+  hs.timer.doAfter(0.6,
+                   function()
+                     rect:delete()
+                   end)
+end
+
+
+-- -- Set up a callback function to handle window focus events
+wf:subscribe(hs.window.filter.windowFocused, function(window, appName)
+               drawBorderOnfocusedWindow()
+end)
 
 hs.application.enableSpotlightForNameSearches(true)
