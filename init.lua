@@ -282,7 +282,7 @@ hs.urlevent.bind("CarlosAlert", function(eventName, params)
                    for k, select_screen in pairs(hs.screen.allScreens()) do
                      hs.alert.show(params.message,{atScreenEdge=0,
                                                    fadeInDuration = 0.15,
-                                                   fadeOutDuration = 1.85,
+                                                   fadeOutDuration = 5,
                                                    textSize = 18,
                                                    fillColor={red=255/255,green=150/255,blue=203/255}},select_screen,2.618)
                      -- drawRectangle(2)
@@ -356,6 +356,19 @@ function dump(o)
   end
 end
 
+function moveCursorToCenterOfFocusedWindow()
+  -- Get the currently focused window
+  local win = hs.window.focusedWindow()
+
+  -- Get the frame of the window
+  local frame = win:frame()
+
+  -- Calculate the center of the window
+  local center = hs.geometry.rectMidPoint(frame)
+
+  -- Move the cursor to the center of the window
+  hs.mouse.setAbsolutePosition(center)
+end
 
 
 function toggleApplication(app)
@@ -374,7 +387,6 @@ function toggleApplication(app)
   if app_info then
     app = hs.application.get(app_info["CFBundleIdentifier"])
   end
-
   if not app then
     -- Application not running, launch app
     if appPath then
@@ -420,6 +432,13 @@ function toggleApplication(app)
       end
     end
   end
+  if app_info["CFBundleIdentifier"] == "org.gnu.Emacs" then
+    print("app is:"..app_info["CFBundleIdentifier"])
+    hs.mouse.setAbsolutePosition({x=0, y=0})
+  else
+    moveCursorToCenterOfFocusedWindow()
+  end
+
   if setInputMethod then
     if inputMethod == 'English' then
       English()
@@ -518,36 +537,38 @@ hs.hotkey.bind({"ctrl", "alt"}, "space",Spoitfy_toggle_play_or_stop)
 hs.hotkey.bind({"ctrl", "alt"}, "Left",Spoitfy_prev_song)
 hs.hotkey.bind({"ctrl", "alt"}, "Right",Spoitfy_next_song)
 
-local function drawBorderOnfocusedWindow()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  local fx = f.x
-  local fy = f.y
-  local fw = f.w
-  local fh = f.h
+-- local showing_rect = {}
 
-  -- Create a rectangle object and set its attributes
-  local rect = hs.drawing.rectangle(hs.geometry.rect(fx, fy, fw, fh))
-  rect:setStrokeWidth(3)
-  rect:setStrokeColor({["red"]=0.259,["blue"]=0.545,["green"]=0.792,["alpha"]=1})
-  rect:setFill(false)
-  rect:setLevel(hs.drawing.windowLevels.overlay)
-  rect:setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
+-- local function drawBorderOnfocusedWindow()
+--   local win = hs.window.focusedWindow()
+--   local f = win:frame()
+--   local fx = f.x
+--   local fy = f.y
+--   local fw = f.w
+--   local fh = f.h
 
-  -- Show the rectangle object
-  rect:show()
+--   -- Create a rectangle object and set its attributes
+--   local rect = hs.drawing.rectangle(hs.geometry.rect(fx, fy, fw, fh))
+--   rect:setStrokeWidth(3)
+--   rect:setStrokeColor({["red"]=0.259,["blue"]=0.545,["green"]=0.792,["alpha"]=1})
+--   rect:setFill(false)
+--   rect:setLevel(hs.drawing.windowLevels.overlay)
+--   rect:setBehavior(hs.drawing.windowBehaviors.canJoinAllSpaces)
 
-  -- Remove the rectangle object after 2 seconds
-  hs.timer.doAfter(0.6,
-                   function()
-                     rect:delete()
-                   end)
-end
+--   -- Show the rectangle object
+--   rect:show()
+
+--   -- Remove the rectangle object after 2 seconds
+--   hs.timer.doAfter(1.0,
+--                    function()
+--                      rect:delete()
+--                    end)
+-- end
 
 
 -- -- Set up a callback function to handle window focus events
-wf:subscribe(hs.window.filter.windowFocused, function(window, appName)
-               drawBorderOnfocusedWindow()
-end)
+-- wf:subscribe(hs.window.filter.windowFocused, function(window, appName)
+--                drawBorderOnfocusedWindow()
+-- end)
 
 hs.application.enableSpotlightForNameSearches(true)
