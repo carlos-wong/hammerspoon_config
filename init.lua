@@ -433,7 +433,6 @@ function toggleApplication(app)
     end
   end
   if app_info["CFBundleIdentifier"] == "org.gnu.Emacs" then
-    print("app is:"..app_info["CFBundleIdentifier"])
     hs.mouse.setAbsolutePosition({x=0, y=0})
   else
     moveCursorToCenterOfFocusedWindow()
